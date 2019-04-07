@@ -6,8 +6,10 @@ import $ from 'jquery'
  * param : nowLevel 当前关卡数据
  * */
 export function createTortoise(nowLevel) {
+    console.log('创建乌龟')
     let left = nowLevel.tortoise.x * 50;
     let top = nowLevel.tortoise.y * 50;
+    console.log(left, top)
     return (
         <div className="tortoise" style={{ left, top }}></div>
     )
@@ -97,10 +99,10 @@ function walkTortoise(tortoise, walk, nowLevel) { // 乌龟移动
 
     // 检测是否该进入下一关
     if(nextLevel()) {
-        $('.map').empty();
+        $(document).unbind();
         this.setState((state)=>{
            return {
-               level: state.level === 2 ? 0 : ++ state.level
+               success: !state.success
            }
         });
     }

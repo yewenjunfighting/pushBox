@@ -3,14 +3,16 @@ import $ from 'jquery'
 
 /**
  * function : 创建乌龟, 根据当前level中的tortoise对象的x, y设置left和top值, 进行决定定位
- * param : nowLevel 当前关卡数据
+ * param : nowLevel 当前关卡数据 ; changePos 当它为true时,表示要对乌龟进行重定位,在用户点击再玩一次时传入true
  * */
-export function createTortoise(nowLevel) {
+export function createTortoise(nowLevel, changePos) {
     console.log('创建乌龟')
     let left = nowLevel.tortoise.x * 50;
     let top = nowLevel.tortoise.y * 50;
-    console.log(left, top)
-    return (
+    if(changePos) {
+        $('.tortoise').css('left', left);
+        $('.tortoise').css('top', top);
+    }else return (
         <div className="tortoise" style={{ left, top }}></div>
     )
 }

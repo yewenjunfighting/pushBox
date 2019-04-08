@@ -8,6 +8,7 @@ class Prompt extends Component {
             <div id="prompt">
                 <div className="title">{this.props.title}</div>
                 <div className="Button">
+                    <button onClick={this.props.playAgain}>再玩一次</button>
                     <button onClick={this.props.nextLevel}>确定</button>
                 </div>
             </div>

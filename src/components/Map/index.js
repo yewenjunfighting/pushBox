@@ -26,7 +26,12 @@ class Map extends Component {
     }
 
     componentDidUpdate() {
-       if(!this.state.success) bindTortoise(gameLevel[this.state.level], this) // 在组件更新之后重新对组件进行事件绑定
+        console.log('更新完成')
+       if(!this.state.success) {
+           createTortoise(gameLevel[this.state.level], true); // 注意这时候因为传入了true,所以不会返回jsx,而是对已经更新完成的tortoise进行定位，下面的createBox也是同理
+           createBox(gameLevel[this.state.level], true);
+           bindTortoise(gameLevel[this.state.level], this) // 在组件更新之后重新对组件进行事件绑定
+       }
     }
 
     playAgain() {
@@ -46,7 +51,6 @@ class Map extends Component {
         })
     }
     render() {
-        console.log('在玩一次, 重新布局')
         let level = this.state.level;
         let levelData = gameLevel[level].map; // 根据关卡数选出对应数据, map是一个数组
         let sideLength = Math.sqrt(levelData.length) * 50;
@@ -69,6 +73,7 @@ class Map extends Component {
                 { createTortoise(gameLevel[level]) }
                 { this.state.success ? (<FireWork />) : '' }
                 { this.state.success ?  <Prompt
+                    playAgain={this.playAgain}
                     nextLevel={this.nextLevel}
                     title={this.state.level === 2 ? this.state.result : (this.state.level === 0 ? this.state.process : this.state.midProcess)}/> : '' }
             </div>

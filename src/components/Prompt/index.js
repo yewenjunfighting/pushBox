@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
+import $ from 'jquery'
 
 import './index.css'
 
 class Prompt extends Component {
+    componentDidMount() {
+        if(this.props.title === '恭喜你过了最难的一关！回首页看看吧!') {
+            $('#prompt').css('top', 650);
+        }
+    }
     render() {
         return (
             <div id="prompt">

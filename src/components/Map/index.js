@@ -5,12 +5,13 @@ import Prompt from '../Prompt'
 import gameLevel from '../../assets/LevelData/data'
 import { createBox } from '../../controller/box'
 import PlayChoose from '../PlayChoose'
-import { createTortoise,bindTortoise } from "../../controller/tortoise";
-
+import { createTortoise,bindTortoise } from "../../controller/tortoise"
+import { Redirect } from 'react-router-dom'
 
 import './index.css'
 
 class Map extends Component {
+
     constructor(props) {
         super(props);
         this.state = { // level 表示游戏关卡, 初始是第一关
@@ -18,7 +19,8 @@ class Map extends Component {
             success: false,
             process: '闯关成功, 赶快试试下一关吧!',
             midProcess: '再接再厉, 还剩最后一关咯!',
-            result: '恭喜你过了最难的一关！回首页看看吧!'
+            result: '恭喜你过了最难的一关！回首页看看吧!',
+            jump: false
         };
         this.playAgain = this.playAgain.bind(this);
         this.nextLevel = this.nextLevel.bind(this);
@@ -65,13 +67,21 @@ class Map extends Component {
         }
     }
 
-    nextLevel() {
-        this.setState((state)=>{
-            return {
-                level: state.level + 1,
-                success: !state.success
-            }
-        })
+    nextLevel() { // nextLevel有两种调用情况 1.在游戏过程中,因为完成这关要进入下一关,调用playAgain; 2.最后一关完成了,要跳转到levelChoose组件,调用playAgain
+        if(this.state.level === 2) {
+            this.setState((state)=>{
+                return {
+                    jump: !state.jump
+                }
+            })
+        }else {
+            this.setState((state)=>{
+                return {
+                    level: state.level + 1,
+                    success: !state.success
+                }
+            })
+        }
     }
     render() {
         console.log('重新渲染');
@@ -82,6 +92,7 @@ class Map extends Component {
         let dom = null;
         return (
             <div className="container">
+                { this.state.jump ? <Redirect to={{ pathname: '/levelChoose' }} /> : ''}
                 <Cloud />
                 <PlayChoose playAgain={this.playAgain}/>
                 <div id="map" style={{ width: sideLength}}>

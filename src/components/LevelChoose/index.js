@@ -16,11 +16,11 @@ class LevelChoose extends Component {
                         }}>简单</Link>
                         <Link to={{
                             pathname: "/map",
-                            search: "?level=0"
+                            search: "?level=1"
                         }}>中等</Link>
                         <Link to={{
                             pathname: "/map",
-                            search: "?level=0"
+                            search: "?level=2"
                         }}>困难</Link>
                         <Link to={{
                             pathname: "/"

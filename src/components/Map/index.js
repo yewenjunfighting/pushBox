@@ -4,8 +4,7 @@ import FireWork from '../FireWork'
 import Prompt from '../Prompt'
 import gameLevel from '../../assets/LevelData/data'
 import { createBox } from '../../controller/box'
-import reStart from '../../assets/imgs/reStart.jpg'
-import levelChoose from '../../assets/imgs/levelChoose.jpg'
+import PlayChoose from '../PlayChoose'
 import { createTortoise,bindTortoise } from "../../controller/tortoise";
 
 
@@ -50,11 +49,20 @@ class Map extends Component {
     }
 
     playAgain() {
-        this.setState((state)=>{
-            return {
-                success: !state.success
-            }
-        })
+        // playAgain有两种调用情况 1.在游戏过程中,因为走错一步而无法完成,要playAgain; 2.这局通关了,想再玩一次,要playAgain
+        if(this.state.success) {
+            this.setState((state)=>{
+                return {
+                    success: !state.success
+                }
+            })
+        }else {
+            this.setState((state)=>{ // 属于第二种的playAgain, 仅仅想要把乌龟和box复位而已
+                return {
+                    success: state.success
+                }
+            })
+        }
     }
 
     nextLevel() {
@@ -75,6 +83,7 @@ class Map extends Component {
         return (
             <div className="container">
                 <Cloud />
+                <PlayChoose playAgain={this.playAgain}/>
                 <div id="map" style={{ width: sideLength}}>
                     {
                         levelData.map((val, index)=>{
@@ -89,7 +98,7 @@ class Map extends Component {
                     }
                     { createBox(gameLevel[level])  }
                     { createTortoise(gameLevel[level]) }
-                    { this.state.success ? (<FireWork />) : '' }
+                    { this.state.success && this.state.level === 2 ? (<FireWork />) : '' }
                     { this.state.success ?  <Prompt
                         playAgain={this.playAgain}
                         nextLevel={this.nextLevel}

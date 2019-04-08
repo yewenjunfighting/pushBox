@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import gameLevel from '../../assets/LevelData/data'
-import { createBox } from '../../controller/box'
-import { createTortoise,bindTortoise } from "../../controller/tortoise";
+import Cloud from '../Cloud'
 import FireWork from '../FireWork'
 import Prompt from '../Prompt'
+import gameLevel from '../../assets/LevelData/data'
+import { createBox } from '../../controller/box'
+import reStart from '../../assets/imgs/reStart.jpg'
+import levelChoose from '../../assets/imgs/levelChoose.jpg'
+import { createTortoise,bindTortoise } from "../../controller/tortoise";
+
 
 import './index.css'
 
@@ -19,6 +23,17 @@ class Map extends Component {
         };
         this.playAgain = this.playAgain.bind(this);
         this.nextLevel = this.nextLevel.bind(this);
+    }
+
+    componentWillMount() {
+        let queryStr = this.props.location.search.split('?')[1];
+        if(queryStr) {
+            console.log(queryStr.split('=')[1]);
+            this.setState({
+                level: parseInt(queryStr.split('=')[1]) // 因为查询串取下的level是string类型的,这里要转为number类型,否则在切换到下一关时会因为字符串相加而找不到对应的数据出错
+            })
+        }
+        console.log(queryStr)
     }
 
     componentDidMount() {
@@ -51,31 +66,35 @@ class Map extends Component {
         })
     }
     render() {
+        console.log('重新渲染');
         let level = this.state.level;
+        console.log(level);
         let levelData = gameLevel[level].map; // 根据关卡数选出对应数据, map是一个数组
         let sideLength = Math.sqrt(levelData.length) * 50;
         let dom = null;
         return (
-
-            <div id="map" style={{ width: sideLength}}>
-                {
-                    levelData.map((val, index)=>{
-                        switch(val) { // 根据elem的值来应用样式
-                            case 1 : dom = (<div className="cell" key={index}></div>); break; // 普通格子
-                            case 2 : dom = (<div className="wall" key={index}></div>); break;// 墙
-                            case 3 : dom = (<div className="target" key={index}></div>); break;// 目标格子
-                            default: break;
-                        }
-                        return dom;
-                    })
-                }
-                { createBox(gameLevel[level])  }
-                { createTortoise(gameLevel[level]) }
-                { this.state.success ? (<FireWork />) : '' }
-                { this.state.success ?  <Prompt
-                    playAgain={this.playAgain}
-                    nextLevel={this.nextLevel}
-                    title={this.state.level === 2 ? this.state.result : (this.state.level === 0 ? this.state.process : this.state.midProcess)}/> : '' }
+            <div className="container">
+                <Cloud />
+                <div id="map" style={{ width: sideLength}}>
+                    {
+                        levelData.map((val, index)=>{
+                            switch(val) { // 根据elem的值来应用样式
+                                case 1 : dom = (<div className="cell" key={index}></div>); break; // 普通格子
+                                case 2 : dom = (<div className="wall" key={index}></div>); break;// 墙
+                                case 3 : dom = (<div className="target" key={index}></div>); break;// 目标格子
+                                default: break;
+                            }
+                            return dom;
+                        })
+                    }
+                    { createBox(gameLevel[level])  }
+                    { createTortoise(gameLevel[level]) }
+                    { this.state.success ? (<FireWork />) : '' }
+                    { this.state.success ?  <Prompt
+                        playAgain={this.playAgain}
+                        nextLevel={this.nextLevel}
+                        title={this.state.level === 2 ? this.state.result : (this.state.level === 0 ? this.state.process : this.state.midProcess)}/> : '' }
+                </div>
             </div>
         )
     }

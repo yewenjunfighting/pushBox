@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {HashRouter as Router, Route, Switch} from "react-router-dom";
 import React, {Suspense} from "react";
 import Map from '../components/Map'
 import Home from '../components/Home'

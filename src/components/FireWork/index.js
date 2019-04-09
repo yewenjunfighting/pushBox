@@ -8,7 +8,7 @@ class FireWork extends Component{
     render() {
         return (
             <div id="container">
-                <div id="fireworks"><img src={ fireworks } alt="烟火" width="100px"height="100px"/></div>
+                <div id="fireworks"><img src={ fireworks } alt="烟火"/></div>
                 <div id="firecracker"><img src={ firecracker } alt="爆竹" width="8px"/></div>
             </div>
         )

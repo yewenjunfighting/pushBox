@@ -23,6 +23,12 @@
     opacity: 0.5;
 }
 
+#imgBox {
+    width: 768px;
+    height: 1024px;
+    margin: 0 auto;
+}
+
 .levelLink {
     position: absolute;
     top: 40%;

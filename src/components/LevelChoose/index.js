@@ -8,7 +8,9 @@ class LevelChoose extends Component {
     render() {
         return (
                 <div id="levelChoose">
-                    <img src={level} alt="图片"/>
+                    <div id="imgBox">
+                        <img src={level} alt="图片"/>
+                    </div>
                     <div className="levelLink">
                         <Link to={{
                             pathname: "/map",

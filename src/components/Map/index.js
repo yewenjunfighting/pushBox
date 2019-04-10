@@ -20,7 +20,7 @@ class Map extends Component {
             process: '闯关成功, 赶快试试下一关吧!',
             midProcess: '再接再厉, 还剩最后一关咯!',
             result: '恭喜你过了最难的一关！回首页看看吧!',
-            jump: false
+            jump: false // jump用于判断是否进行路由跳转
         };
         this.playAgain = this.playAgain.bind(this);
         this.nextLevel = this.nextLevel.bind(this);
@@ -42,7 +42,6 @@ class Map extends Component {
     }
 
     componentDidUpdate() {
-        console.log('更新完成')
        if(!this.state.success) {
            createTortoise(gameLevel[this.state.level], true); // 注意这时候因为传入了true,所以不会返回jsx,而是对已经更新完成的tortoise进行定位，下面的createBox也是同理
            createBox(gameLevel[this.state.level], true);
@@ -51,7 +50,7 @@ class Map extends Component {
     }
 
     playAgain() {
-        // playAgain有两种调用情况 1.在游戏过程中,因为走错一步而无法完成,要playAgain; 2.这局通关了,想再玩一次,要playAgain
+        // playAgain有两种调用情况 1.在游戏过程中,因为走错一步而无法完成,要playAgain 2.这局通关了,想再玩一次,要playAgain
         if(this.state.success) {
             this.setState((state)=>{
                 return {
@@ -67,7 +66,7 @@ class Map extends Component {
         }
     }
 
-    nextLevel() { // nextLevel有两种调用情况 1.在游戏过程中,因为完成这关要进入下一关,调用playAgain; 2.最后一关完成了,要跳转到levelChoose组件,调用playAgain
+    nextLevel() { // nextLevel有两种调用情况 1.在游戏过程中,因为完成这关要进入下一关,调用nextLevel 2.最后一关完成了,要跳转到levelChoose组件,调用playAgain
         if(this.state.level === 2) {
             this.setState((state)=>{
                 return {
@@ -84,7 +83,6 @@ class Map extends Component {
         }
     }
     render() {
-        console.log('重新渲染');
         let level = this.state.level;
         console.log(level);
         let levelData = gameLevel[level].map; // 根据关卡数选出对应数据, map是一个数组

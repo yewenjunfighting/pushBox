@@ -6,7 +6,6 @@ import $ from 'jquery'
  * param : nowLevel 当前关卡数据 ; changePos 当它为true时,表示要对乌龟进行重定位,在用户点击再玩一次时传入true
  * */
 export function createTortoise(nowLevel, changePos) {
-    console.log('创建乌龟')
     let left = nowLevel.tortoise.x * 50;
     let top = nowLevel.tortoise.y * 50;
     if(changePos) {
@@ -59,23 +58,23 @@ function walkTortoise(tortoise, walk, nowLevel) { // 乌龟移动
     let walkX = walk.x || 0; // 传下来的walk中只有x或者只有y, 如果没有的值就为0, 那么就不会对位置产生影响
     let walkY = walk.y || 0;
     let rowNum = Math.sqrt(nowLevel.map.length); // map每行的格子个数
-    let kind = nowLevel.map[(tortoise.data('y') + walkY) * rowNum + tortoise.data('x') + walkX];
-    if(kind !== 2) {
+    let kind = nowLevel.map[(tortoise.data('y') + walkY) * rowNum + tortoise.data('x') + walkX]; // 取出乌龟移动方向上前一位的值
+    if(kind !== 2) { // 如果不是墙, 就移动乌龟到目标位
         tortoise.data('y', tortoise.data('y') + walkY); // 设置乌龟的坐标
         tortoise.data('x', tortoise.data('x') + walkX);
 
         tortoise.css('top', tortoise.data('y') * 50); // 移动乌龟
         tortoise.css('left', tortoise.data('x') * 50);
 
-        $('.box').each($.proxy(function(i, elem) {
+        $('.box').each($.proxy(function(i, elem) { // 检测乌龟是否碰到了box
             if(impactCheck(tortoise, $(elem))) { // 如果碰上box了, 那么当前乌龟的位置和某个box的位置是相同的, 接下来就看这个box是否可以往乌龟来的那个方向移动
-                kind = nowLevel.map[(tortoise.data('y') + walkY) * rowNum + tortoise.data('x') + walkX];
-                if(kind !== 2) { // 如果和乌龟碰撞的那个箱子可以往指定方向移动的话, 就改变箱子的left和top, 就相当于把在乌龟身上干做过的,在box身上再做一次, 让box移动
-                    $(elem).css('left', (tortoise.data('x') + walkX) * 50);
+                kind = nowLevel.map[(tortoise.data('y') + walkY) * rowNum + tortoise.data('x') + walkX]; // 取出乌龟往先前方向再次移动后的值
+                if(kind !== 2) { // 如果没有碰到墙, 也就是说乌龟碰到的那个箱子可以往指定方向移动, 就改变箱子的left和top, 就相当于把在乌龟身上干做过的,在box身上再做一次, 让box移动
+                    $(elem).css('left', (tortoise.data('x') + walkX) * 50); // 我们先把elem移动, 如果箱子前面还有箱子的话,那么两个箱子就会重叠在一起，针对这种情况,下面会有解决的方法
                     $(elem).css('top', (tortoise.data('y') + walkY) * 50);
                     $('.box').each($.proxy(function(j, Elem ){ // 对刚才移动的那个box再做一次碰撞检测(这里要注意只有真正的移动了才可以做碰撞检测),如果有碰撞(排除自身的干扰),就撤回刚才对box的移动
-                        if(elem !== Elem && impactCheck($(elem), $(Elem))) {
-                            $(elem).css('left', (tortoise.data('x')) * 50); // 把box移动到乌龟所在的位置
+                        if(elem !== Elem && impactCheck($(elem), $(Elem))) { //如果elem移动到另一个box上, 那么根据规则,乌龟是推不动箱子的, 那么就要让elem和乌龟回到原来的位置上
+                            $(elem).css('left', (tortoise.data('x')) * 50); // 把box移动到乌龟所在的位置, 也就是回到原来的位置
                             $(elem).css('top', (tortoise.data('y')) * 50);
 
                             tortoise.data('y', tortoise.data('y') - walkY); // 重新设置乌龟的坐标
@@ -86,15 +85,13 @@ function walkTortoise(tortoise, walk, nowLevel) { // 乌龟移动
                         }
                     }, this));
 
-                }else { // 如果box无法移动就撤回乌龟的移动
+                }else { // 如果box按乌龟移动的方向移动会遇到墙, 就撤回乌龟的移动，回到原位置
                     tortoise.data('y', tortoise.data('y') - walkY);
                     tortoise.data('x', tortoise.data('x') - walkX);
 
                     tortoise.css('top', tortoise.data('y') * 50);
                     tortoise.css('left', tortoise.data('x') * 50);
                 }
-            }else {
-
             }
         }, this));
     }

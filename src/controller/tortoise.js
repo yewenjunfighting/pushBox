@@ -22,9 +22,9 @@ export function createTortoise(nowLevel, changePos) {
  * return : none
  * */
 export function bindTortoise(nowLevel, _this) {
-    $(document).unbind(); // 解除先前绑定的keydown事件,否则会移动会出现跳步的情况
+    $(document).unbind(); // 解除先前绑定的keyDown事件,否则移动会出现跳步的情况
     let tortoise = $('.tortoise');
-    tortoise.data('x', nowLevel.tortoise.x); // 存储乌龟的坐标, 在移动的时候使用
+    tortoise.data('x', nowLevel.tortoise.x);
     tortoise.data('y', nowLevel.tortoise.y);
     $(document).keydown(function(event) {
         switch(event.which) { //
@@ -113,6 +113,7 @@ function walkTortoise(tortoise, walk, nowLevel) { // 乌龟移动
  * return : none
  * */
 function impactCheck(elem1, elem2) {
+    // offset()返回元素的偏移量
     let left1 = elem1.offset().left;
     let right1 = elem1.offset().left + elem1.width();
     let top1 = elem1.offset().top;
@@ -144,3 +145,4 @@ function nextLevel() {
         return true;
     }else return false;
 }
+

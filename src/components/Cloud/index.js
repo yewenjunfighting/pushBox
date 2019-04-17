@@ -5,6 +5,9 @@ import './style/demo.css'
 import './style/normalize.css'
 
 class Cloud extends Component {
+    shouldComponentUpdate() {
+        return false;
+    }
     render() {
         return (
             <div className="static-area">

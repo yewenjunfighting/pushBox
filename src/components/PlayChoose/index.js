@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom'
 import './index.css'
 
 class PlayChoose extends Component {
+    shouldComponentUpdate() {
+        return false;
+    }
     render() {
         return (
             <div id="playChoose">

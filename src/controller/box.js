@@ -9,11 +9,10 @@ import $ from 'jquery'
  * return : none
  * */
 export function createBox (levelData, changePos) {
-    let box = levelData.box;
+    let box = JSON.parse(window.sessionStorage.getItem('box')) || levelData.box;
     let len = levelData.map.length;
-    console.log(`${changePos}`);
     if(changePos) {
-        console.log('复位');
+        box = levelData.box;
         $('.box').each((i, elem)=>{
             $(elem).css('left', box[i].x * 50);
             $(elem).css('top', box[i].y * 50);
@@ -25,4 +24,22 @@ export function createBox (levelData, changePos) {
             <div className="box" style={{left, top}} key={len + index}></div>
         )
     });
+}
+
+/**
+ * @param pos box的位置
+ * */
+export function storeBoxPos(pos) {
+    window.sessionStorage.setItem('box', JSON.stringify(pos))
+}
+
+/**
+ * @param index tortoise walkX walkY
+ * */
+export function updateBoxPos(index, x, y) {
+    let oldBoxPos = JSON.parse(window.sessionStorage.getItem('box'));
+    oldBoxPos[index].x = x;
+    oldBoxPos[index].y = y;
+    storeBoxPos(oldBoxPos);
+    console.log('update')
 }

@@ -3,9 +3,9 @@ import Cloud from '../Cloud'
 import FireWork from '../FireWork'
 import Prompt from '../Prompt'
 import gameLevel from '../../assets/LevelData/data'
-import { createBox } from '../../controller/box'
+import { createBox, storeBoxPos } from '../../controller/box'
 import PlayChoose from '../PlayChoose'
-import { createTortoise, bindTortoise } from "../../controller/tortoise"
+import { createTortoise, bindTortoise, storeTortoisePos } from "../../controller/tortoise"
 import { Redirect } from 'react-router-dom'
 
 import './index.css'
@@ -27,6 +27,11 @@ class Map extends Component {
     }
 
     componentWillMount() {
+        // 存储乌龟和box的坐标
+       if(!window.sessionStorage.getItem('tortoise')) {
+           storeBoxPos(gameLevel[this.state.level].box);
+           storeTortoisePos(gameLevel[this.state.level].tortoise);
+       }
         // 判断是否是通过Link跳转过来的
         let queryStr = this.props.location.search.split('?')[1];
         if(queryStr) {
@@ -40,6 +45,11 @@ class Map extends Component {
         bindTortoise(gameLevel[this.state.level], this) // 组件挂在完之后进行keyDown事件的绑定
     }
 
+    componentWillUpdate() {
+        // 当下一关的时候更新box和乌龟的位置
+        console.log(this.state.level)
+    }
+
     componentDidUpdate() {
         // 重新开始游戏
        if(!this.state.success) {
@@ -49,7 +59,14 @@ class Map extends Component {
        }
     }
 
+    componentWillUnmount() {
+        // window.sessionStorage.clear();
+    }
+
     playAgain() {
+        // 重玩一次就把sessionStorage置为初始位置
+        storeBoxPos(gameLevel[this.state.level].box);
+        storeTortoisePos(gameLevel[this.state.level].tortoise);
         // playAgain有两种调用情况 1.在游戏过程中,因为走错一步而无法完成,要playAgain 2.这局通关了,想再玩一次,要playAgain
         if(this.state.success) {
             this.setState((state)=>{
@@ -76,6 +93,8 @@ class Map extends Component {
             })
         }else {
             this.setState((state)=>{
+                storeBoxPos(gameLevel[state.level + 1].box);
+                storeTortoisePos(gameLevel[state.level + 1].tortoise);
                 return {
                     level: state.level + 1,
                     success: !state.success
@@ -83,6 +102,7 @@ class Map extends Component {
             })
         }
     }
+
     render() {
         // level表示游戏进行到第level + 1关
         let level = this.state.level;

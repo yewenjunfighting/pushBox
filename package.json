@@ -5,6 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "gh-pages": "^2.0.1",
+    "handlebars": "4.0.14",
     "jquery": "3.4.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
